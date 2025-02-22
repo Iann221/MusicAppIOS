@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -45,35 +46,48 @@
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="LP4-Fy-J7q">
                                         <rect key="frame" x="16" y="62" width="361" height="31"/>
                                     </slider>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gep-BZ-nK5">
-                                        <rect key="frame" x="175" y="8" width="43.333333333333343" height="40"/>
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gep-BZ-nK5">
+                                        <rect key="frame" x="176.66666666666666" y="16" width="40" height="40"/>
                                         <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="HBx-4k-kDF"/>
                                             <constraint firstAttribute="height" constant="40" id="QrY-1M-dhy"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="play.fill" catalog="system"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal">
+                                            <imageReference key="image" image="play.fill" catalog="system" symbolScale="medium"/>
+                                        </state>
+                                        <state key="selected" image="pause.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="btnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="byc-yN-D0L"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WeU-kL-epe">
-                                        <rect key="frame" x="248.33333333333337" y="8" width="63" height="40"/>
+                                        <rect key="frame" x="248.33333333333337" y="16" width="63" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="Nys-Sq-WEh"/>
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="forward.end.alt.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="btnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kY1-bb-qpp"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTg-XU-jhO">
-                                        <rect key="frame" x="82" y="8" width="63" height="40"/>
+                                        <rect key="frame" x="82" y="16" width="63" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="r7X-ty-eDo"/>
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="backward.end.alt.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="btnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="EB7-An-pb6"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="WeU-kL-epe" firstAttribute="centerY" secondItem="gep-BZ-nK5" secondAttribute="centerY" id="0Fx-ae-cP7"/>
-                                    <constraint firstItem="gep-BZ-nK5" firstAttribute="top" secondItem="2CA-bE-aMg" secondAttribute="top" constant="8" id="86H-4w-Fgn"/>
+                                    <constraint firstItem="gep-BZ-nK5" firstAttribute="top" secondItem="2CA-bE-aMg" secondAttribute="top" constant="16" id="86H-4w-Fgn"/>
                                     <constraint firstItem="WeU-kL-epe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gep-BZ-nK5" secondAttribute="trailing" constant="8" symbolic="YES" id="Eew-TY-N37"/>
                                     <constraint firstAttribute="trailing" secondItem="WeU-kL-epe" secondAttribute="trailing" constant="81.666666666666629" id="KPu-eh-8Xz"/>
                                     <constraint firstItem="ZTg-XU-jhO" firstAttribute="leading" secondItem="2CA-bE-aMg" secondAttribute="leading" constant="82" id="Nil-PY-woz"/>
@@ -103,6 +117,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="nextBtn" destination="WeU-kL-epe" id="GOM-KT-8ek"/>
+                        <outlet property="playBtn" destination="gep-BZ-nK5" id="SKR-tZ-tlI"/>
+                        <outlet property="prevBtn" destination="ZTg-XU-jhO" id="1Tb-8h-NJb"/>
                         <outlet property="searchTextField" destination="HoG-hI-gGf" id="KBj-EX-i4r"/>
                         <outlet property="tableView" destination="Fc3-WI-0Rt" id="PLc-om-FGE"/>
                         <outlet property="trackSlider" destination="LP4-Fy-J7q" id="4sg-7w-OZp"/>
@@ -117,6 +134,7 @@
     <resources>
         <image name="backward.end.alt.fill" catalog="system" width="128" height="62"/>
         <image name="forward.end.alt.fill" catalog="system" width="128" height="62"/>
+        <image name="pause.fill" catalog="system" width="114" height="128"/>
         <image name="play.fill" catalog="system" width="120" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

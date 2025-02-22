@@ -14,6 +14,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var trackView: UIView!
     @IBOutlet weak var trackSlider: UISlider!
+    @IBOutlet weak var playBtn: UIButton!
+    @IBOutlet weak var prevBtn: UIButton!
+    @IBOutlet weak var nextBtn: UIButton!
     
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
@@ -22,7 +25,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         tableView.register(UINib(nibName: TrackTableViewCell.cellIdentifier, bundle: nil), forCellReuseIdentifier: TrackTableViewCell.cellIdentifier)
         setupTextField()
-        trackSlider.addTarget(self, action: #selector(sliderReleased), for: [.touchUpInside, .touchUpOutside])
+        trackSlider.addTarget(self, action: #selector(continueAudio), for: [.touchUpInside, .touchUpOutside])
         setupBinding()
     }
     
@@ -43,16 +46,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
         searchTextField.resignFirstResponder() // Hide keyboard
     }
     
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        viewModel.pauseAudio()
         viewModel.lastCellChosen.accept(-1)
         viewModel.fetchTracks(with: searchTextField.text ?? "")
         textField.resignFirstResponder()
         return true
     }
     
-    @objc func sliderReleased() {
-        viewModel.playAudioFrom(TimeInterval(trackSlider.value))
+    @objc func continueAudio() {
+        if(playBtn.isSelected){
+            viewModel.playAudioFrom(TimeInterval(trackSlider.value))
+        } else {
+            viewModel.pauseAudio()
+        }
     }
         
     private func setupBinding() {
@@ -69,17 +76,41 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         tableView.rx.itemSelected
             .subscribe(onNext: { indexPath in
-                var selectIndex = self.viewModel.lastCellChosen.value
-                if(selectIndex != -1 && indexPath.row != selectIndex){
-                    self.viewModel.cellViewModels.value[selectIndex].chosen.accept(false)
-                }
-                selectIndex = indexPath.row
-                self.viewModel.cellViewModels.value[selectIndex].chosen.accept(true)
-                self.viewModel.lastCellChosen.accept(selectIndex)
-                self.viewModel.playAudioFrom(0)
+                self.updateSelectedCell(row: indexPath.row)
             })
             .disposed(by: disposeBag)
-
+        
+        Observable<Int>.interval(.milliseconds(500), scheduler: MainScheduler.instance)
+            .compactMap { [weak self] _ in self?.viewModel.audioPlayer?.currentTime }
+            .map {Float($0/(self.viewModel.audioPlayer?.duration ?? 1))}
+            .distinctUntilChanged()
+            .bind(to: trackSlider.rx.value)
+            .disposed(by: disposeBag)
+    }
+    
+    @IBAction func btnAction(_ sender: UIButton){
+        if(sender == playBtn){
+            sender.isSelected.toggle()
+            continueAudio()
+        } else if(sender == prevBtn){
+            guard viewModel.lastCellChosen.value != 0 else {return}
+            updateSelectedCell(row: viewModel.lastCellChosen.value - 1)
+        } else if(sender == nextBtn){
+            guard viewModel.lastCellChosen.value != 9 else {return}
+            updateSelectedCell(row: viewModel.lastCellChosen.value + 1)
+        }
+    }
+    
+    private func updateSelectedCell(row: Int){
+        playBtn.isSelected = true
+        var selectIndex = viewModel.lastCellChosen.value
+        if(selectIndex != -1 && row != selectIndex){
+            viewModel.cellViewModels.value[selectIndex].chosen.accept(false)
+        }
+        selectIndex = row
+        viewModel.cellViewModels.value[selectIndex].chosen.accept(true)
+        viewModel.lastCellChosen.accept(selectIndex)
+        viewModel.playAudioFrom(0)
     }
 
 }

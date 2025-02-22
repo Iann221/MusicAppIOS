@@ -67,5 +67,13 @@ class MainViewModel {
             // error
         }
     }
+    
+    func pauseAudio() {
+        if let player = audioPlayer {
+            player.pause()
+        } else {
+            // error
+        }
+    }
 
 }
