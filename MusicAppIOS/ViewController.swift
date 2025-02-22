@@ -11,7 +11,9 @@ import RxSwift
 class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchTextField: UITextField!
+    
     @IBOutlet weak var trackView: UIView!
+    @IBOutlet weak var trackSlider: UISlider!
     
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
@@ -20,6 +22,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         tableView.register(UINib(nibName: TrackTableViewCell.cellIdentifier, bundle: nil), forCellReuseIdentifier: TrackTableViewCell.cellIdentifier)
         setupTextField()
+        trackSlider.addTarget(self, action: #selector(sliderReleased), for: [.touchUpInside, .touchUpOutside])
         setupBinding()
     }
     
@@ -38,6 +41,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @objc func doneTapped() {
         searchTextField.resignFirstResponder() // Hide keyboard
+    }
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        viewModel.lastCellChosen.accept(-1)
+        viewModel.fetchTracks(with: searchTextField.text ?? "")
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @objc func sliderReleased() {
+        viewModel.playAudioFrom(TimeInterval(trackSlider.value))
     }
         
     private func setupBinding() {
@@ -61,15 +76,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 selectIndex = indexPath.row
                 self.viewModel.cellViewModels.value[selectIndex].chosen.accept(true)
                 self.viewModel.lastCellChosen.accept(selectIndex)
+                self.viewModel.playAudioFrom(0)
             })
             .disposed(by: disposeBag)
 
     }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        viewModel.lastCellChosen.accept(-1)
-        viewModel.fetchTracks(with: searchTextField.text ?? "")
-        textField.resignFirstResponder()
-        return true
-    }
+
 }

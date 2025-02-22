@@ -42,7 +42,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2CA-bE-aMg">
                                 <rect key="frame" x="0.0" y="718" width="393" height="100"/>
                                 <subviews>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="LP4-Fy-J7q">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="LP4-Fy-J7q">
                                         <rect key="frame" x="16" y="62" width="361" height="31"/>
                                     </slider>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gep-BZ-nK5">
@@ -105,6 +105,7 @@
                     <connections>
                         <outlet property="searchTextField" destination="HoG-hI-gGf" id="KBj-EX-i4r"/>
                         <outlet property="tableView" destination="Fc3-WI-0Rt" id="PLc-om-FGE"/>
+                        <outlet property="trackSlider" destination="LP4-Fy-J7q" id="4sg-7w-OZp"/>
                         <outlet property="trackView" destination="2CA-bE-aMg" id="zRI-Ne-Tfv"/>
                     </connections>
                 </viewController>

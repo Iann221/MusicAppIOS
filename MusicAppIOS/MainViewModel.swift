@@ -7,10 +7,26 @@
 
 import RxSwift
 import RxCocoa
+import AVFoundation
 
 class MainViewModel {
     let cellViewModels: BehaviorRelay<[TrackCellViewModel]> = BehaviorRelay(value: [])
     let lastCellChosen: BehaviorRelay<Int> = BehaviorRelay(value: -1)
+    var audioPlayer: AVAudioPlayer?
+    
+    init(){
+        guard let url = Bundle.main.url(forResource: "Elevator-music", withExtension: "mp3") else {
+            // error
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+        } catch {
+            // error
+            print(error)
+        }
+    }
 
     func fetchTracks(with artist: String){
         let urlString = "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=\(artist)&api_key=a7a42bb92340cf6fd72fb167a9cd1f90&limit=10&format=json"
@@ -41,4 +57,15 @@ class MainViewModel {
             self.cellViewModels.accept(tempVM)
         }.resume()
     }
+    
+    func playAudioFrom(_ interval: TimeInterval) {
+        if let player = audioPlayer {
+            player.prepareToPlay()
+            player.currentTime = player.duration * interval
+            player.play()
+        } else {
+            // error
+        }
+    }
+
 }
