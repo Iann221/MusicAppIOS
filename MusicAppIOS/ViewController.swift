@@ -19,11 +19,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var prevBtn: UIButton!
     @IBOutlet weak var nextBtn: UIButton!
     
-    private let viewModel = MainViewModel()
+    private let viewModel = MainViewModel(audioFileName: "Elevator-music", apiURL: "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=")
     private let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.setupAudioPlayer()
         tableView.register(UINib(nibName: TrackTableViewCell.cellIdentifier, bundle: nil), forCellReuseIdentifier: TrackTableViewCell.cellIdentifier)
         setupTextField()
         trackSlider.addTarget(self, action: #selector(continueAudio), for: [.touchUpInside, .touchUpOutside])
@@ -66,6 +67,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private func setupBinding() {
         viewModel.cellViewModels
             .bind(to: tableView.rx.items(cellIdentifier: TrackTableViewCell.cellIdentifier, cellType: TrackTableViewCell.self)) { row, vm, cell in
+                self.viewModel.isLoading.accept(false)
                 cell.configure(vm: vm)
             }
             .disposed(by: disposeBag)
@@ -76,8 +78,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
             .disposed(by: disposeBag)
         
         viewModel.isLoading
-            .map { !$0 }
-            .bind(to: loadingIndicator.rx.isHidden)
+            .map { ($0,!$0) }
+            .bind { [weak loadingIndicator] isAnimating, isHidden in
+                isAnimating ? loadingIndicator?.startAnimating() : loadingIndicator?.stopAnimating()
+                loadingIndicator?.isHidden = isHidden
+            }
             .disposed(by: disposeBag)
         
         viewModel.error
@@ -104,10 +109,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.updateSelectedCell(row: indexPath.row)
             })
             .disposed(by: disposeBag)
-                
-        Observable<Int>.interval(.milliseconds(500), scheduler: MainScheduler.instance)
-            .compactMap { [weak self] _ in self?.viewModel.audioPlayer?.currentTime }
-            .map {Float($0/(self.viewModel.audioPlayer?.duration ?? 1))}
+
+        Observable<Int>
+            .interval(.milliseconds(500), scheduler: MainScheduler.instance)
+            .compactMap { [weak self] _ -> TimeInterval? in
+                guard let self = self else { return nil }
+                return self.viewModel.audioPlayer?.currentTime
+            }
+            .map { [weak self] currentTime -> Float in
+                guard let self = self else { return 0 }
+                let duration = self.viewModel.audioPlayer?.duration ?? 1
+                return Float(currentTime / duration)
+            }
             .distinctUntilChanged()
             .bind(to: trackSlider.rx.value)
             .disposed(by: disposeBag)

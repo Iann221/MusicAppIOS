@@ -16,9 +16,16 @@ class MainViewModel {
     let error: PublishSubject<ErrorEnum> = PublishSubject()
     
     var audioPlayer: AVAudioPlayer?
+    private let audioFileName: String
+    private let apiURL: String
     
-    init(){
-        guard let url = Bundle.main.url(forResource: "Elevator-music", withExtension: "mp3") else {
+    init(audioFileName: String, apiURL: String){
+        self.audioFileName = audioFileName
+        self.apiURL = apiURL
+    }
+    
+    func setupAudioPlayer() {
+        guard let url = Bundle.main.url(forResource: audioFileName, withExtension: "mp3") else {
             self.error.onNext(.audioError)
             return
         }
@@ -29,10 +36,14 @@ class MainViewModel {
             self.error.onNext(.parsingError)
         }
     }
+    
+    func resetAudioPlayer(){
+        audioPlayer = nil
+    }
 
     func fetchTracks(with artist: String){
         isLoading.accept(true)
-        let urlString = "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=\(artist)&api_key=a7a42bb92340cf6fd72fb167a9cd1f90&limit=10&format=json"
+        let urlString = "\(apiURL)\(artist)&api_key=a7a42bb92340cf6fd72fb167a9cd1f90&limit=10&format=json"
             
         guard let url = URL(string: urlString) else {
             error.onNext(.invalidURL)
@@ -62,21 +73,21 @@ class MainViewModel {
     }
     
     func playAudioFrom(_ interval: TimeInterval) {
-        if let player = audioPlayer {
-            player.prepareToPlay()
-            player.currentTime = player.duration * interval
-            player.play()
-        } else {
+        guard let player = audioPlayer else {
             self.error.onNext(.audioError)
+            return
         }
+        player.prepareToPlay()
+        player.currentTime = player.duration * interval
+        player.play()
     }
     
     func pauseAudio() {
-        if let player = audioPlayer {
-            player.pause()
-        } else {
+        guard let player = audioPlayer else {
             self.error.onNext(.audioError)
+            return
         }
+        player.pause()
     }
 
 }
