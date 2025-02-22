@@ -100,6 +100,9 @@
                                     <constraint firstAttribute="bottom" secondItem="LP4-Fy-J7q" secondAttribute="bottom" constant="8" id="xoQ-ov-Jss"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="cjK-xK-eT6">
+                                <rect key="frame" x="0.0" y="109" width="393" height="609"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -107,16 +110,21 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Fc3-WI-0Rt" secondAttribute="bottom" id="Ebo-sS-GSF"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WoM-7P-jzt" secondAttribute="trailing" id="I0S-cA-Twk"/>
                             <constraint firstItem="WoM-7P-jzt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="INn-tm-N7f"/>
+                            <constraint firstItem="cjK-xK-eT6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JET-T5-5YV"/>
                             <constraint firstItem="Fc3-WI-0Rt" firstAttribute="top" secondItem="WoM-7P-jzt" secondAttribute="bottom" id="QNs-eL-GOu"/>
+                            <constraint firstItem="cjK-xK-eT6" firstAttribute="top" secondItem="WoM-7P-jzt" secondAttribute="bottom" id="V2e-WD-emc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fc3-WI-0Rt" secondAttribute="trailing" id="WCi-1y-6BH"/>
                             <constraint firstItem="Fc3-WI-0Rt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZFC-nj-UAG"/>
                             <constraint firstItem="WoM-7P-jzt" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="cwd-f4-dau"/>
+                            <constraint firstItem="2CA-bE-aMg" firstAttribute="top" secondItem="cjK-xK-eT6" secondAttribute="bottom" id="fc2-jG-nuX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="cjK-xK-eT6" secondAttribute="trailing" id="iKB-zu-L84"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="2CA-bE-aMg" secondAttribute="bottom" id="vYu-Vd-zGr"/>
                             <constraint firstItem="2CA-bE-aMg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ydG-yf-ggC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2CA-bE-aMg" secondAttribute="trailing" id="zOi-X2-beN"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="loadingIndicator" destination="cjK-xK-eT6" id="6hV-WF-z6r"/>
                         <outlet property="nextBtn" destination="WeU-kL-epe" id="GOM-KT-8ek"/>
                         <outlet property="playBtn" destination="gep-BZ-nK5" id="SKR-tZ-tlI"/>
                         <outlet property="prevBtn" destination="ZTg-XU-jhO" id="1Tb-8h-NJb"/>

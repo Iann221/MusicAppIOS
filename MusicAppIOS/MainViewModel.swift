@@ -12,33 +12,36 @@ import AVFoundation
 class MainViewModel {
     let cellViewModels: BehaviorRelay<[TrackCellViewModel]> = BehaviorRelay(value: [])
     let lastCellChosen: BehaviorRelay<Int> = BehaviorRelay(value: -1)
+    let isLoading: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    let error: PublishSubject<ErrorEnum> = PublishSubject()
+    
     var audioPlayer: AVAudioPlayer?
     
     init(){
         guard let url = Bundle.main.url(forResource: "Elevator-music", withExtension: "mp3") else {
-            // error
+            self.error.onNext(.audioError)
             return
         }
 
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
         } catch {
-            // error
-            print(error)
+            self.error.onNext(.parsingError)
         }
     }
 
     func fetchTracks(with artist: String){
+        isLoading.accept(true)
         let urlString = "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=\(artist)&api_key=a7a42bb92340cf6fd72fb167a9cd1f90&limit=10&format=json"
             
         guard let url = URL(string: urlString) else {
-            // TODO: add error update
+            error.onNext(.invalidURL)
             return
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                // TODO: add error update
+                self.error.onNext(.parsingError)
                 return
             }
             
@@ -47,7 +50,7 @@ class MainViewModel {
                 let decodedResponse = try JSONDecoder().decode(TopTracksResponse.self, from: data)
                 tracks = decodedResponse.toptracks.track
             } catch {
-                // TODO: error
+                self.error.onNext(.parsingError)
             }
             
             var tempVM: [TrackCellViewModel] = []
@@ -64,7 +67,7 @@ class MainViewModel {
             player.currentTime = player.duration * interval
             player.play()
         } else {
-            // error
+            self.error.onNext(.audioError)
         }
     }
     
@@ -72,7 +75,7 @@ class MainViewModel {
         if let player = audioPlayer {
             player.pause()
         } else {
-            // error
+            self.error.onNext(.audioError)
         }
     }
 

@@ -11,6 +11,7 @@ import RxSwift
 class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var trackView: UIView!
     @IBOutlet weak var trackSlider: UISlider!
@@ -74,12 +75,36 @@ class ViewController: UIViewController, UITextFieldDelegate {
             .bind(to: trackView.rx.isHidden)
             .disposed(by: disposeBag)
         
+        viewModel.isLoading
+            .map { !$0 }
+            .bind(to: loadingIndicator.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.error
+            .observe(on: MainScheduler.instance) // main thread
+            .subscribe(onNext: { err in
+                self.viewModel.isLoading.accept(false)
+                var msg = ""
+                switch err {
+                case .invalidURL:
+                    msg = "invalid url"
+                case .parsingError:
+                    msg = "there was an error in fetching data"
+                case .audioError:
+                    msg = "there was a problem with the audio"
+                }
+                let alert = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+        
         tableView.rx.itemSelected
             .subscribe(onNext: { indexPath in
                 self.updateSelectedCell(row: indexPath.row)
             })
             .disposed(by: disposeBag)
-        
+                
         Observable<Int>.interval(.milliseconds(500), scheduler: MainScheduler.instance)
             .compactMap { [weak self] _ in self?.viewModel.audioPlayer?.currentTime }
             .map {Float($0/(self.viewModel.audioPlayer?.duration ?? 1))}
