@@ -12,7 +12,7 @@ class MainViewModel {
     let cellViewModels: BehaviorRelay<[TrackCellViewModel]> = BehaviorRelay(value: [])
     let lastCellChosen: BehaviorRelay<Int> = BehaviorRelay(value: -1)
 
-    func fetchDatas(_ artist: String){
+    func fetchTracks(with artist: String){
         let urlString = "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=\(artist)&api_key=a7a42bb92340cf6fd72fb167a9cd1f90&limit=10&format=json"
             
         guard let url = URL(string: urlString) else {

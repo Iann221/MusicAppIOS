@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var trackView: UIView!
@@ -19,8 +19,25 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: TrackTableViewCell.cellIdentifier, bundle: nil), forCellReuseIdentifier: TrackTableViewCell.cellIdentifier)
+        setupTextField()
         setupBinding()
-        viewModel.fetchDatas("Queen")
+    }
+    
+    private func setupTextField() {
+        searchTextField.returnKeyType = .done
+        let toolbar = UIToolbar()
+        toolbar.barStyle = .default
+        toolbar.items = [
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(title: "Hide", style: .done, target: self, action: #selector(doneTapped))
+        ]
+        toolbar.sizeToFit()
+        searchTextField.inputAccessoryView = toolbar
+        searchTextField.delegate = self
+    }
+    
+    @objc func doneTapped() {
+        searchTextField.resignFirstResponder() // Hide keyboard
     }
         
     private func setupBinding() {
@@ -47,5 +64,12 @@ class ViewController: UIViewController {
             })
             .disposed(by: disposeBag)
 
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        viewModel.lastCellChosen.accept(-1)
+        viewModel.fetchTracks(with: searchTextField.text ?? "")
+        textField.resignFirstResponder()
+        return true
     }
 }
