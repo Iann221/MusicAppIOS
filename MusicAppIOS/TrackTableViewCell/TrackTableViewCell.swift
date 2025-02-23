@@ -11,7 +11,7 @@ import RxSwift
 class TrackTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var playCountLabel: UILabel!
-    @IBOutlet weak var playingLabel: UILabel!
+    @IBOutlet weak var playingImage: UIImageView!
     static let cellIdentifier = "TrackTableViewCell"
     private let disposeBag = DisposeBag()
 
@@ -31,7 +31,7 @@ class TrackTableViewCell: UITableViewCell {
         playCountLabel.text = vm.playCount
         vm.chosen
             .map {!$0}
-            .bind(to: playingLabel.rx.isHidden)
+            .bind(to: playingImage.rx.isHidden)
             .disposed(by: disposeBag)
     }
     

@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e56-2G-MC2">
-                        <rect key="frame" x="16" y="8" width="195" height="21"/>
+                        <rect key="frame" x="16" y="8" width="258" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="6lh-l3-I92"/>
                         </constraints>
@@ -35,31 +35,35 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" ambiguous="YES" text="Now playing" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Da6-Gd-sJ7">
-                        <rect key="frame" x="211" y="-34" width="93" height="68"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="music.note.list" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="lHg-F0-NsC">
+                        <rect key="frame" x="274" y="-34" width="30" height="128"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="owO-R0-1KM"/>
+                            <constraint firstAttribute="height" constant="30" id="yqd-QL-Lqx"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="Da6-Gd-sJ7" secondAttribute="trailing" constant="16" id="5yE-aW-2wd"/>
-                    <constraint firstItem="Da6-Gd-sJ7" firstAttribute="leading" secondItem="e56-2G-MC2" secondAttribute="trailing" id="81n-bG-VAD"/>
+                    <constraint firstItem="lHg-F0-NsC" firstAttribute="leading" secondItem="e56-2G-MC2" secondAttribute="trailing" id="4KZ-oG-VhI"/>
+                    <constraint firstItem="lHg-F0-NsC" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="4kc-mU-ElH"/>
                     <constraint firstItem="beH-3t-139" firstAttribute="leading" secondItem="e56-2G-MC2" secondAttribute="leading" id="Imm-hd-av6"/>
                     <constraint firstAttribute="bottom" secondItem="beH-3t-139" secondAttribute="bottom" constant="8" id="Iz1-Je-i4x"/>
                     <constraint firstItem="e56-2G-MC2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="QBQ-J7-QcN"/>
-                    <constraint firstItem="Da6-Gd-sJ7" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="TZH-gd-Joy"/>
                     <constraint firstItem="beH-3t-139" firstAttribute="top" secondItem="e56-2G-MC2" secondAttribute="bottom" id="hPG-Ar-3Mg"/>
                     <constraint firstItem="e56-2G-MC2" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="lhK-Vd-U4W"/>
+                    <constraint firstAttribute="trailing" secondItem="lHg-F0-NsC" secondAttribute="trailing" constant="16" id="slx-RJ-saO"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="playCountLabel" destination="beH-3t-139" id="GI4-DO-YUN"/>
-                <outlet property="playingLabel" destination="Da6-Gd-sJ7" id="yKb-dT-cKz"/>
+                <outlet property="playingImage" destination="lHg-F0-NsC" id="yHs-U0-Uq2"/>
                 <outlet property="titleLabel" destination="e56-2G-MC2" id="A6O-wc-mb9"/>
             </connections>
             <point key="canvasLocation" x="10.687022900763358" y="29.225352112676056"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="music.note.list" catalog="system" width="128" height="115"/>
+    </resources>
 </document>
